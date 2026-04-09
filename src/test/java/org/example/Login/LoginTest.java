@@ -1,7 +1,7 @@
 package org.example.Login;
 import org.example.BaseTest;
 import org.example.pages.LoginPage;
-import org.example.utils.AssertHelpperManager;
+import org.example.utils.AssertHelperManager;
 import org.example.utils.ConfigReader;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
@@ -84,11 +84,11 @@ public class LoginTest extends BaseTest {
         getTest().info("ნავიგაცია და დარეფრეშება ავტორიზაციის შემდეგ");
     LoginPage loginPage = new LoginPage(driver);
         SoftAssert softAssert = new SoftAssert();
-        AssertHelpperManager assertHelpperManager = new AssertHelpperManager(driver);
+        AssertHelperManager assertHelperManager = new AssertHelperManager(driver);
         getTest().info("ავტორიზაცია");
         loginPage.Login(ConfigReader.get("login.mail"), ConfigReader.get("login.password"));
         getTest().info("გადასვლა განცხადების გვერდზე ");
-        assertHelpperManager.navigateToAdvertisementPage(softAssert);
+        assertHelperManager.navigateToAdvertisementPage(softAssert);
         getTest().info("URL-ის შემოწმება");
     assertstring(loginPage.getcurrentURL(), ConfigReader.get("login.url"));
         getTest().info("გვერდის რეფრეში და URL-ის ხელახალი შემოწმება");

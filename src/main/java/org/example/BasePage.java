@@ -6,45 +6,45 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 
 public class BasePage {
-    protected static WebDriver driver;
+    protected WebDriver driver;
+    public  WebDriverWait shortWait;
     public WebDriverWait wait;
 
 
     public BasePage (WebDriver driver){
         this.driver= driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("wait")));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("long.wait")));
+        this.shortWait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("short.wait")));
         PageFactory.initElements(driver,this);
     }
     public void refreshPage(){
         driver.navigate().refresh();
     }
     public void Sendkeys (WebElement locator, String text){
-        waitelementtobevisible(locator);
+        waitElementToBeVisible(locator);
+        locator.clear();
         locator.sendKeys(text);
     }
 
 
-    public void waitelementtoboclickable (WebElement locator){
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+    public void waitElementToBeClickable(WebElement locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public void waitelementtobevisible (WebElement locator){
-        WebElement element = wait.until(ExpectedConditions.visibilityOf( locator));
+    public void waitElementToBeVisible(WebElement locator) {
+        wait.until(ExpectedConditions.visibilityOf(locator));
     }
 
-    public void Click (WebElement locator){
-        waitelementtoboclickable(locator);
-        waitelementtobevisible(locator);
-
+    public void click(WebElement locator) {
+        waitElementToBeClickable(locator);
         locator.click();
     }
 
     public String Gettext(WebElement locator){
-        waitelementtobevisible(locator);
+        waitElementToBeVisible(locator);
         return locator.getText();
 
     }
@@ -56,5 +56,9 @@ public class BasePage {
                 .executeScript("arguments[0].scrollIntoView({block:'center'});", element);
 
     }
+
+
+
+
 
 }

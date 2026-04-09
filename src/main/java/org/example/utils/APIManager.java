@@ -3,19 +3,30 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.example.utils.ExtentReportManager.getTest;
 
-public class APIManager {
-
-    public APIManager(String baseuri) {
-        RestAssured.baseURI = baseuri;
+public class APIManager  {
+    public APIManager() {
+        RestAssured.baseURI = ConfigReader.get("BASE_URL");
     }
 
-    public static Response get(String endpoint, Map<String, String> headers, int postid, int statuscode) {
+    public Map<String, String> getHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        return headers;
+    }
+
+    public String uniqueTitle(String base) {
+        return base + "-" + UUID.randomUUID().toString();
+    }
+
+
+
+    public Response get(String endpoint, Map<String, String> headers, int postid) {
         return given()
                 .pathParam("id", postid)
                 .accept(ContentType.JSON)
@@ -24,13 +35,12 @@ public class APIManager {
                 .when()
                 .get(endpoint)
                 .then()
-                .statusCode(statuscode)
                 .log().all()
                 .extract()
                 .response();
     }
 
-    public static Response post(String endpoint, Map<String, String> headers, Object body) {
+    public Response post(String endpoint, Map<String, String> headers, Object body) {
         return given()
                 .contentType(ContentType.JSON)
                 .headers(headers)
@@ -44,7 +54,7 @@ public class APIManager {
                 .response();
     }
 
-    public static Response getParams(String endpoint, Map<String, String> headers,
+    public Response getParams(String endpoint, Map<String, String> headers,
                                          Map<String, Object> params) {
         return given()
                 .headers(headers)
@@ -56,7 +66,7 @@ public class APIManager {
                 .response();
     }
 
-    public static Response put(String endpoint, Map<String, String> headers, int id, Object body) {
+    public Response put(String endpoint, Map<String, String> headers, int id, Object body) {
         return given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
@@ -71,7 +81,7 @@ public class APIManager {
                 .response();
     }
 
-    public static Response delete(String endpoint, Map<String, String> headers, int id, int statuscode) {
+    public Response delete(String endpoint, Map<String, String> headers, int id) {
         return given()
                 .pathParam("id", id)
                 .headers(headers)
@@ -79,7 +89,6 @@ public class APIManager {
                 .when()
                 .delete(endpoint)
                 .then()
-                .statusCode(statuscode)
                 .log().all()
                 .extract()
                 .response();
@@ -87,37 +96,25 @@ public class APIManager {
 
 
 
-    public static void assertWithLog(int actual, int expected, String description) {
+    public void assertWithLog(int actual, int expected, String description) {
         if (actual == expected) {
-            Assert.assertEquals(actual, expected);
             getTest().pass(description + " — წარმატებულია: " + actual);
-        } else {
             Assert.assertEquals(actual, expected);
+        } else {
             getTest().fail(description + " — მოსალოდნელი: " + expected + ", მიღებული: " + actual);
+            Assert.assertEquals(actual, expected);
         }
     }
 
-    public static void assertWithLog(String actual, String expected, String description) {
+    public void assertWithLog(String actual, String expected, String description) {
         if (actual.equals(expected)) {
-            Assert.assertEquals(actual, expected);
             getTest().pass(description + " — წარმატებულია: " + actual);
-        } else {
             Assert.assertEquals(actual, expected);
+        } else {
             getTest().fail(description + " — მოსალოდნელი: " + expected + ", მიღებული: " + actual);
+            Assert.assertEquals(actual, expected);
         }
 
-    }
-
-
-
-    private Map<String, Object> buildBody() {
-        Map<String, Object> body = new HashMap<>();
-        body.put("title", ConfigReader.get("DEF.TITLE"));
-        body.put("price", ConfigReader.get("DEF.PRICE"));
-        body.put("description", ConfigReader.get("DEF.DESCRIPTION"));
-        body.put("categoryId", ConfigReader.get("DEF.CATID"));
-        body.put("images", new String[]{ConfigReader.get("DEF.IMAGE")});
-        return body;
     }
 
 

@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginPage extends BasePage {
 //elements
@@ -44,55 +45,61 @@ WebElement onlymailsymbolvalid;
 WebElement logoutbtn;
 
 
-//methods
 public LoginPage (WebDriver driver){
         super(driver);
         PageFactory.initElements(driver,this);
     }
 
-
 public void ClickLoginBtn(){
+    shortWait.until(ExpectedConditions.visibilityOf(userloginButton));
 userloginButton.click();
 }
 public void Login(String userlogin, String passwordlogin){
     ClickLoginBtn();
     Sendkeys(username,userlogin);
     Sendkeys(password,passwordlogin);
-    Click(loginbtn);
+    click(loginbtn);
 }
 
 public String logincheck(){
-Click(loginuser);
+    shortWait.until(ExpectedConditions.visibilityOf(loginuser));
+    click(loginuser);
 return loginusername.getText();
 
 }
 
 public String useridckeck(){
-    Click(loginuser);
+    shortWait.until(ExpectedConditions.visibilityOf(loginuser));
+    click(loginuser);
         return userid.getText();
 }
 
 
 public String emptymaillogin(){
+    shortWait.until(ExpectedConditions.visibilityOf(emptymailloginvalid));
     return emptymailloginvalid.getText();
 }
 
 public String emptypasslogin(){
+    shortWait.until(ExpectedConditions.visibilityOf(emptypassloginvalid));
 return emptypassloginvalid.getText();
 }
 
 public String emptypassvalid(){
+    shortWait.until(ExpectedConditions.visibilityOf(emptypassvalidsec));
     return emptypassvalidsec.getText();
 }
 
 public String onlymailvalid (){
+    shortWait.until(ExpectedConditions.visibilityOf(onlymailsymbolvalid));
     return onlymailsymbolvalid.getText();
 }
 
-public void clickLogoutbtn(){;
-    Click(loginuser);
+public void clickLogoutbtn(){
+    shortWait.until(ExpectedConditions.visibilityOf(loginuser));
+    click(loginuser);
     scroll(logoutbtn);
-    Click(logoutbtn);
+    click(logoutbtn);
 }
 
 

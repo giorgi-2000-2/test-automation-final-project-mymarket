@@ -1,14 +1,15 @@
 package org.example;
-import com.aventstack.extentreports.ExtentTest;
 import org.example.pages.AdvertisementPage;
 import org.example.pages.LoginPage;
-import org.example.utils.AssertHelpperManager;
+import org.example.utils.AssertHelperManager;
 import org.example.utils.DriverManager;
 import org.example.utils.ConfigReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -20,18 +21,22 @@ import static org.example.utils.ExtentReportManager.getTest;
 
 
 public class BaseTest {
-    protected static WebDriver driver;
+    protected WebDriver driver;
+    public WebDriverWait wait;
+    public WebDriverWait shortWait;
+
     @BeforeMethod
     public void setUp(){
-        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         driver = DriverManager.getDriver();
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("long.wait")));
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         driver.manage().window().maximize();
         driver.get(ConfigReader.get("base.url"));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         advertisementPage.CloseExtraContent();
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement dialog = driver.findElement(By.xpath("/html/body/dialog[2]"));
+            WebElement dialog = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/dialog[2]")));
+            //WebElement dialog = wait.until(driver.findElement(By.xpath("/html/body/dialog[2]")));
 
             ((JavascriptExecutor) driver).executeScript(
                     "arguments[0].close();", dialog
@@ -58,13 +63,12 @@ public class BaseTest {
         Assert.assertEquals(act,exp);
     }
 
-public void loginAndNavigate(){
+public void loginAndNavigate(SoftAssert softAssert, AssertHelperManager assertHelperManager){
     LoginPage loginPage = new LoginPage(driver);
-    SoftAssert softAssert = new SoftAssert();
-    AssertHelpperManager assertHelpperManager = new AssertHelpperManager(driver);
-    AdvertisementPage advertisementPage = new AdvertisementPage(driver);
+    getTest().info("დალოგინება");
     loginPage.Login(ConfigReader.get("login.mail"), ConfigReader.get("login.password"));
-    assertHelpperManager.navigateToAdvertisementPage(softAssert);
+    getTest().info("ნავიგაცია განცხადების დამატების გვერდზე");
+    assertHelperManager.navigateToAdvertisementPage(softAssert);
 
 }
 

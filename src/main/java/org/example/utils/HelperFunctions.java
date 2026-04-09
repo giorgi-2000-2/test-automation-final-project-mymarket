@@ -1,5 +1,4 @@
 package org.example.utils;
-
 import com.aventstack.extentreports.ExtentTest;
 import org.example.BasePage;
 import org.example.pages.AdvertisementPage;
@@ -7,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.asserts.SoftAssert;
-
 import java.util.List;
 
 import static org.example.utils.ExtentReportManager.getTest;
@@ -20,15 +18,15 @@ public class HelperFunctions extends BasePage{
 
 
     public void EmptyWithDataCheck(SoftAssert softAssert, ExtentTest node) {
-        AssertHelpperManager assertHelpperManager =new AssertHelpperManager(driver);
+        AssertHelperManager assertHelperManager =new AssertHelperManager(driver);
         AdvertisementPage advertisementPage = new AdvertisementPage(driver);
-        boolean bool = !advertisementPage.mainElements.isEmpty();
+        boolean bool = !advertisementPage.mainElements().isEmpty();
         if (!bool) {
-            advertisementPage.waitString(advertisementPage.title);
-            System.out.println(advertisementPage.title.getText());
-            assertHelpperManager.itemToData(advertisementPage.title.getText(),softAssert,node);
-            scroll(advertisementPage.dropdowncategory);
-            advertisementPage.waitClick(advertisementPage.dropdowncategory);
+            advertisementPage.waitString(advertisementPage.getTitle());
+            System.out.println(advertisementPage.getTitle().getText());
+            assertHelperManager.itemToData(advertisementPage.getTitle().getText(),softAssert,node);
+            scroll(advertisementPage.getDropdownCategory());
+            advertisementPage.waitClick(advertisementPage.getDropdownCategory());
         } else {
 
             advertisementPage.createList();
@@ -39,8 +37,8 @@ public class HelperFunctions extends BasePage{
                 scroll(subb);
                 advertisementPage.waitClick(subb);
                 EmptyWithDataCheck( softAssert,node);
-                scroll(advertisementPage.dropdowncategory);
-                advertisementPage.waitClick(advertisementPage.dropdowncategory);
+                scroll(advertisementPage.getDropdownCategory());
+                advertisementPage.waitClick(advertisementPage.getDropdownCategory());
                 advertisementPage.createList();
             }
             advertisementPage.backClick();
@@ -48,34 +46,36 @@ public class HelperFunctions extends BasePage{
 
 
     }
+
+
     //ბოლო კატეგორიიდან იწყება ბრენდების შემოოწმება, branddropdownfind თან არგუმენტებით დაკავშირება (პოულობს დროპდაუნს)
     //იქმნება რეპორტში ცალკე ქვესექციები შესაბამისი აითემის ბრენდების
     //itemToDataBrands ჩაიტანს არგუმენტებით
     public void EmptyWithDataCheckBrands(SoftAssert softAssert, ExtentTest node) {
-        AssertHelpperManager assertHelpperManager =new AssertHelpperManager(driver);
+        AssertHelperManager assertHelperManager =new AssertHelperManager(driver);
         AdvertisementPage advertisementPage = new AdvertisementPage(driver);
-        boolean bool = !advertisementPage.mainElements.isEmpty();
+        boolean bool = !advertisementPage.mainElements().isEmpty();
         if (!bool) {
-            advertisementPage.waitString(advertisementPage.title);
-            String titleText = advertisementPage.title.getText();
+            advertisementPage.waitString(advertisementPage.getTitle());
+            String titleText = advertisementPage.getTitle().getText();
             ExtentTest itemNode = node.createNode(titleText);
             try {
-                List<String> brands = assertHelpperManager.brandDropdownFind(node,advertisementPage.title.getText());
+                List<String> brands = assertHelperManager.brandDropdownFind(node,advertisementPage.getTitle().getText());
                 if (brands.isEmpty()) {
                     itemNode.info(titleText + " — ბრენდის dropdown არ არის, გამოტოვება");
                 }
                 else {
                     ExtentTest brandsNode = itemNode.createNode("ბრენდები");
                     for (String brand : brands) {
-                        assertHelpperManager.itemToDataBrands(brandsNode, titleText, brand, softAssert);
+                        assertHelperManager.itemToDataBrands(brandsNode, titleText, brand, softAssert);
                     }
                 }
             } catch (Exception e) {
                 itemNode.info(titleText + " — ბრენდი არ აქვს: " );
             }
 
-            scroll(advertisementPage.dropdowncategory);
-            advertisementPage.waitClick(advertisementPage.dropdowncategory);
+            scroll(advertisementPage.getDropdownCategory());
+            advertisementPage.waitClick(advertisementPage.getDropdownCategory());
         } else {
             for (int h = 1; h < advertisementPage.createList().size(); h++) {
                 String subName = advertisementPage.createList().get(h).getText();
@@ -83,8 +83,8 @@ public class HelperFunctions extends BasePage{
                 scroll(advertisementPage.createList().get(h));
                 advertisementPage.waitClick(advertisementPage.createList().get(h));
                 EmptyWithDataCheckBrands(softAssert, subNode);
-                scroll(advertisementPage.dropdowncategory);
-                advertisementPage.waitClick(advertisementPage.dropdowncategory);
+                scroll(advertisementPage.getDropdownCategory());
+                advertisementPage.waitClick(advertisementPage.getDropdownCategory());
             }
             advertisementPage.backClick();
         }
@@ -102,7 +102,6 @@ public class HelperFunctions extends BasePage{
             scroll(option);
             advertisementPage.waitClick(option);
             for (int j = 1; j < advertisementPage.createList().size(); j++) {
-               // advertisementPage.createList();
                 WebElement sub = advertisementPage.createList().get(j);
                 scroll(sub);
                 advertisementPage.waitClick(sub);
@@ -117,7 +116,7 @@ public class HelperFunctions extends BasePage{
 
         advertisementPage.backClick();
 
-    } //ES
+    }
 
 
 
