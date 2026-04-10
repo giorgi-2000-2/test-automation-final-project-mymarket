@@ -5,7 +5,10 @@ import org.example.pages.AdvertisementPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
+import java.time.Duration;
 import java.util.List;
 
 import static org.example.utils.ExtentReportManager.getTest;
@@ -57,10 +60,13 @@ public class HelperFunctions extends BasePage{
         boolean bool = !advertisementPage.mainElements().isEmpty();
         if (!bool) {
             advertisementPage.waitString(advertisementPage.getTitle());
+            try {
+                textWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(advertisementPage.getTitle(), advertisementPage.getTitle().getText())));
+            } catch (Exception e) {}
             String titleText = advertisementPage.getTitle().getText();
             ExtentTest itemNode = node.createNode(titleText);
             try {
-                List<String> brands = assertHelperManager.brandDropdownFind(node,advertisementPage.getTitle().getText());
+                List<String> brands = assertHelperManager.brandDropdownFind(node);
                 if (brands.isEmpty()) {
                     itemNode.info(titleText + " — ბრენდის dropdown არ არის, გამოტოვება");
                 }
@@ -118,7 +124,15 @@ public class HelperFunctions extends BasePage{
 
     }
 
-
-
+public String titletext(WebElement locator) {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
+    WebDriverWait localwait = new WebDriverWait(driver, Duration.ofSeconds(1));
+    String titletext =locator.getText();
+    try {
+        localwait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(locator, titletext)));
+        return advertisementPage.getSplitString(locator.getText());
+    } catch (Exception e) {
+        return advertisementPage.getSplitString(locator.getText());
+    }}
 
 }

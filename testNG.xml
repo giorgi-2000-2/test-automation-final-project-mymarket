@@ -19,7 +19,8 @@
         <classes>
             <class name="org.example.Login.AdvertisementTest">
                 <methods>
-                    <include name="testCheckSellTypeAllItems"/>
+<!--                  //  <include name="testCheckSellTypeCategoryDataBrands"/>-->
+                    <include name="testCheckSellTypeCategoryDataBrands"/>
                 </methods>
             </class>
         </classes>

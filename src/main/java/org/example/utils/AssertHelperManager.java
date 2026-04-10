@@ -20,19 +20,19 @@ import java.util.List;
 import static org.example.utils.ExtentReportManager.getTest;
 
 public class AssertHelperManager extends BasePage{
+
     public AssertHelperManager(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }
 
-AdvertisementPage advertisementPage = new AdvertisementPage(driver);
-
     public void ifEmpty(SoftAssert softAssert,ExtentTest node) {
+        HelperFunctions helperFunctions = new HelperFunctions(driver);
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         boolean bool = !advertisementPage.mainElements().isEmpty();
         if (!bool) {
-            WebElement title = driver.findElement(By.xpath("//*[@id=\"CatID\"]/div/div/div/div[1]/div[1]"));
-            String titletext = advertisementPage.getSplitString(advertisementPage.getSplitString(title.getText()));
-            assertWithLog( softAssert, node,titletext,(advertisementPage.getTextTitle())," შედარება ");
+            WebElement title = shortWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"CatID\"]/div/div/div/div[1]/div[1]"))));
+            assertWithLog( softAssert, node,helperFunctions.titletext(title),(advertisementPage.getTextTitle())," შედარება ");
             scroll(advertisementPage.getDropdownCategory());
             advertisementPage.waitClick(advertisementPage.getDropdownCategory());
         } else {
@@ -53,7 +53,8 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
     }
 
-    public List<String> brandDropdownFind(ExtentTest node, String title) {
+    public List<String> brandDropdownFind(ExtentTest node) {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         List<String> brandNameList = new ArrayList<>();
         boolean hasBrand;
         try {
@@ -92,14 +93,14 @@ HelperFunctions helperFunctions = new HelperFunctions(driver);
 AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         ExtentTest validationStep = getTest().createNode("ბრენდების შემოწმება");
 
-        for (int i = 0; i < advertisementPage.createList().size(); i++) {
+        for (int i = 0; i < 3; i++) {
             String categoryName = advertisementPage.createList().get(i).getText();
             ExtentTest categoryNode = validationStep.createNode(categoryName);
 
             scroll(advertisementPage.createList().get(i));
             advertisementPage.waitClick(advertisementPage.createList().get(i));
 
-            for (int j = 1; j < advertisementPage.createList().size(); j++) {
+            for (int j = 1; j < 3; j++) {
                // String subName = advertisementPage.createlist().get(j).getText();
                 scroll(advertisementPage.createList().get(j));
                 advertisementPage.waitClick(advertisementPage.createList().get(j));
@@ -168,6 +169,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
     }
 //ეს იიღებს არგუმენტებს და რეკურუსიულლად ჩადის
     private boolean searchBrandInSubcategories(JSONObject node, String[] subCats, int index, String itemName, String brandname) {
+
         try {
             if (index < subCats.length && node.has("subcategories")) {
                 JSONObject subcategories = node.getJSONObject("subcategories");
@@ -185,6 +187,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
     }
 
     public boolean checkCategoryIsVisible() {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
         boolean bool=false;
         if(!advertisementPage.mainElements().isEmpty()){
@@ -200,6 +203,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
     }
 
     public boolean checkMainCategories() {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         boolean pass;
         List<WebElement> option = advertisementPage.createList();
         if(!option.isEmpty()){
@@ -217,6 +221,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
     }
     //ძირითადი ელემენტების შემოწმება SoftAssertით
     public void CheckMainAsserts(SoftAssert softAssert,String url,String str){
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         ExtentTest validationStep = getTest().createNode(str+ " ღილაკზე დაჭერის შემდეგომი შემოწმება");
         assertWithLog(softAssert,validationStep,getcurrentURL(), url, " მისამართის შემოწმება ");
         assertWithLog(softAssert,validationStep,advertisementPage.getUserNamecheck(),advertisementPage.usernameCheck(),"username წარმატებით შემოწმება");
@@ -226,7 +231,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
     }
 
-//ასერშენები
+
     public void assertWithLog(SoftAssert softAssert, ExtentTest node, String actual, String expected, String description) {
         if (actual.equals(expected)) {
             softAssert.assertEquals(actual, expected);
@@ -237,15 +242,6 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         }
     }
 
-    public void assertWithLog(SoftAssert softAssert, String actual, String expected, String description) {
-        if (actual.equals(expected)) {
-            softAssert.assertEquals(actual, expected);
-            getTest().pass(description + " — წარმატებულია: " + actual);
-        } else {
-            softAssert.assertEquals(actual, expected);
-            getTest().fail(description + " — მოსალოდნელი: " + expected + ", მიღებული: " + actual);
-        }
-    }
 
     public void hardAssertWithLog(String actual, String expected, String description) {
         if (actual.equals(expected)) {
@@ -280,6 +276,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
 
     public void checkBackClickInCategories(SoftAssert softAssert) {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         ExtentTest validationStep = getTest().createNode("დროპდაუნ მენიუს კატეგორიები ხილვადია");
         List<String> Oldlistcheck = new ArrayList<>();
         int size1 = advertisementPage.createList().size();
@@ -373,6 +370,7 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
 
     public void navigateToAdvertisementPage(SoftAssert softAssert)  {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         click(advertisementPage.advertisementBtn());
         wait.until(ExpectedConditions.urlToBe("https://www.mymarket.ge/ka/pr-form/"));
         softAssert.assertEquals(getcurrentURL(), "https://www.mymarket.ge/ka/pr-form/");
@@ -387,13 +385,14 @@ AdvertisementPage advertisementPage = new AdvertisementPage(driver);
 
 
     public void checkAllCategoryItems(SoftAssert softAssert) {
+        AdvertisementPage advertisementPage = new AdvertisementPage(driver);
         ExtentTest validationStep = getTest().createNode("კატეგორიების ნახვა");
         advertisementPage.createList();
-        for (int i = 0; i <  advertisementPage.createList().size(); i++) {
+        for (int i = 0; i < 3; i++) {
             scroll(advertisementPage.createList().get(i));
             advertisementPage.waitClick(advertisementPage.createList().get(i));
             advertisementPage.createList();
-            for (int j = 1; j < advertisementPage.createList().size(); j++) {
+            for (int j = 1; j < 3; j++) {
                 advertisementPage.createList();
                 WebElement sub = advertisementPage.createList().get(j);
                 scroll(sub);

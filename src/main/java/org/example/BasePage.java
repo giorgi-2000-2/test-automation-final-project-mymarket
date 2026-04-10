@@ -12,12 +12,14 @@ public class BasePage {
     protected WebDriver driver;
     public  WebDriverWait shortWait;
     public WebDriverWait wait;
+    public WebDriverWait textWait;
 
 
     public BasePage (WebDriver driver){
         this.driver= driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("long.wait")));
         this.shortWait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("short.wait")));
+        this.textWait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getlong("text.wait")));
         PageFactory.initElements(driver,this);
     }
     public void refreshPage(){

@@ -1,10 +1,14 @@
 package org.example.pages;
 import org.example.BasePage;
+import org.example.utils.HelperFunctions;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
+
+import java.time.Duration;
 import java.util.*;
 
 public class AdvertisementPage extends BasePage {
@@ -85,30 +89,31 @@ public class AdvertisementPage extends BasePage {
         return advertisementBtn;
     }
     public WebElement getBrandDropdown(){
-        wait.until(ExpectedConditions.visibilityOf(branddropdown));
+      //  WebDriverWait localwait = new WebDriverWait(driver, Duration.ofSeconds(2));
+       // localwait.until(ExpectedConditions.visibilityOf(branddropdown));
         return branddropdown;
     }
 
     public WebElement FindDropdownBrand(){
-        wait.until(ExpectedConditions.visibilityOf(Finddropdownbrand));
+        textWait.until(ExpectedConditions.visibilityOf(Finddropdownbrand));
         return Finddropdownbrand;
     }
     public WebElement getMainTitle(){
-        wait.until(ExpectedConditions.visibilityOf(mainTitle));
+        shortWait.until(ExpectedConditions.visibilityOf(mainTitle));
         return mainTitle;
     }
 
     public WebElement getPageUsername(){
-        wait.until(ExpectedConditions.visibilityOf(pageusername));
+        shortWait.until(ExpectedConditions.visibilityOf(pageusername));
 
         return pageusername;
     }
     public WebElement getUsernameID(){
-        wait.until(ExpectedConditions.visibilityOf(usernameID));
+        shortWait.until(ExpectedConditions.visibilityOf(usernameID));
         return usernameID;
     }
     public String usernameCheck() {
-        wait.until(ExpectedConditions.visibilityOf(username));
+        shortWait.until(ExpectedConditions.visibilityOf(username));
         return username.getText();
     }
 
@@ -198,23 +203,20 @@ public class AdvertisementPage extends BasePage {
     }
 
     public void waitString(WebElement element) {
-        shortWait.until(ExpectedConditions.not(
+        textWait.until(ExpectedConditions.not(
                 ExpectedConditions.textToBePresentInElement(element, "აირჩიე/ჩაწერე კატეგორია")
         ));
     }
 
     public String getTextTitle(){
-        try{
-        shortWait.until(ExpectedConditions.visibilityOf(titletxt));
-        String old = titletxt.getText();
-        if(!titletxt.getText().equals(old)){
-            shortWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(titletxt, old)));
+        try {
+
+            textWait.until(ExpectedConditions.visibilityOf(titletxt));
+            String str = titletxt.getText();
+            textWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(titletxt, str)));
             return titletxt.getText();
-        }else {
-            return titletxt.getText();
-        }} catch (Exception e) {
-              return " ";
-        }
+        } catch (Exception e) {}
+        return titletxt.getText();
     }
 
     public void clickDropdownCategory() {
@@ -225,12 +227,12 @@ public class AdvertisementPage extends BasePage {
     }
     public WebElement getTitle(){
         String old = title.getText();
-        if(!title.getText().equals(old)){
-            shortWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(title, old)));
+       if(!title.getText().equals(old)){
+            textWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(title, old)));
        return title;
         }else {
             return title;
-        }
+       }
     }
 
     public void waitClick(WebElement element) {
