@@ -126,10 +126,9 @@ public class HelperFunctions extends BasePage{
 
 public String titletext(WebElement locator) {
         AdvertisementPage advertisementPage = new AdvertisementPage(driver);
-    WebDriverWait localwait = new WebDriverWait(driver, Duration.ofSeconds(1));
     String titletext =locator.getText();
     try {
-        localwait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(locator, titletext)));
+        textWait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(locator, titletext)));
         return advertisementPage.getSplitString(locator.getText());
     } catch (Exception e) {
         return advertisementPage.getSplitString(locator.getText());
