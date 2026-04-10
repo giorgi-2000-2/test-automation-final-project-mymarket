@@ -38,7 +38,6 @@ public class AssertHelperManager extends BasePage{
         } else {
             for (int h = 1; h < advertisementPage.createList().size(); h++) {
                 WebElement subb = advertisementPage.createList().get(h);
-                System.out.println("                    " + subb.getText() + "------");
                 scroll(subb);
                 advertisementPage.waitClick(subb);
                 ifEmpty(softAssert,node);
