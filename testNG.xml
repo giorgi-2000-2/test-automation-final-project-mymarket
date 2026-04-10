@@ -7,35 +7,30 @@
   </listeners>
 
 
-<!--<test name="Login test">-->
+<test name="Login test">-->
 
-<!--    <classes>-->
-<!--        <class name="org.example.Login.LoginTest"/>-->
-<!--    </classes>-->
+   <classes>-->
+       <class name="org.example.Login.LoginTest"/>-->
+    </classes>-->
 
-<!--</test>-->
+</test>-->
 
     <test name="Advertisement test">
         <classes>
             <class name="org.example.Login.AdvertisementTest">
-                <methods>
-<!--                  //  <include name="testCheckSellTypeCategoryDataBrands"/>-->
-                    <include name="testCheckSellTypeCategoryDataBrands"/>
-                </methods>
+              
             </class>
         </classes>
     </test>
 
 
-
-<!--    <test name="ApiTest">-->
-
-<!--        <classes>-->
-<!--            <class name="org.example.Api.ApiTest"/>-->
-<!--        </classes>-->
+    <test name="ApiTest">-->
+        <classes>-->          
+         <class name="org.example.Api.ApiTest"/>-->
+        </classes>-->
 
 
 
-<!--    </test>-->
+  </test>-->
 
 </suite>
